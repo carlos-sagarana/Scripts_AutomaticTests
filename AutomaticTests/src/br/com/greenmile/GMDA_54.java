@@ -1,5 +1,7 @@
 package br.com.greenmile;
 
+import io.appium.java_client.AppiumDriver;
+
 import java.io.File;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
@@ -8,16 +10,17 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class GMDA_54 {
 	
 	private String server = "http://beta.greenmile.com";
 	
-	WebDriver driver;
+	private AppiumDriver driver;
+	
+	private static final String url = "http://127.0.0.1:4723/wd/hub";
+
 
 	@Before
 	public void setUp() throws Exception {
@@ -31,14 +34,13 @@ public class GMDA_54 {
 
 		capabilities.setCapability("appium-version", "1.0");
 		capabilities.setCapability("platformName", "Android");
-		capabilities.setCapability("platformVersion", "4.3");
+		capabilities.setCapability("platformVersion", "4.4");
 		capabilities.setCapability("deviceName", "Android Emulator");
 		capabilities.setCapability("app", app.getAbsolutePath());
 		capabilities.setCapability("appPackage", "com.greenmile.android");
 		capabilities.setCapability("appActivity", ".activity.ServerActivity");
 
-		driver = new RemoteWebDriver(new URL("http://localhost:4723/wd/hub"),
-			capabilities);
+		driver = new AppiumDriver(new URL(url), capabilities);
 		driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
 	}
 
@@ -53,8 +55,9 @@ public class GMDA_54 {
 		WebElement writeServer = driver.findElement(By.xpath("//android.widget.EditText[1]"));
 		writeServer.click();
 		writeServer.sendKeys(server);
-				
-		//Click button Save
+		
+		driver.hideKeyboard();
+		
 		WebElement buttonSave = driver.findElement(By.name("general.save"));
 		buttonSave.click();
 				
